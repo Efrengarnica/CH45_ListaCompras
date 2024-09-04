@@ -1,4 +1,5 @@
 const btnAgregar = document.getElementById("btnAgregar");
+const btnClear = document.getElementById("btnClear");
 const txtNombre = document.getElementById("Name");
 const txtNumber = document.getElementById("Number");
 const alertValidaciones = document.getElementById("alertValidaciones");
@@ -16,6 +17,10 @@ let contador = 0;
 let precio = 0;
 let costoTotal = 0;
 let totalEnProductos = 0;
+
+
+//Guardar todos los datos de la tabla en esta variabel
+let datos = new Array(); //Definimos un array 
 
 
 
@@ -87,6 +92,21 @@ btnAgregar.addEventListener("click", function(event){
                     <td>${txtNumber.value}</td>
                     <td>${precio}</td>
     </tr>`;
+    let elemento = {  //Lo guardas en un objeto
+        "contador": contador,
+        "nombre": txtNombre.value,
+        "cantidad": txtNumber.value,
+        "precio": precio
+    };
+    datos.push(elemento); //Lo metes a un arreglo, el objeto
+    localStorage.setItem("datos", JSON.stringify(datos)); //Creo que para JSON necesitas un arreglo
+
+
+
+
+
+
+
     cuerpoTabla.insertAdjacentHTML("beforeend", row);
    //Hace que el recuadro de nombre se ponga en azul y que el cursor se ponga en ese recuadro listo para escribir 
     // Sobre él, sino lo pongo no se pone el cursor en ningún lado
@@ -119,6 +139,52 @@ btnAgregar.addEventListener("click", function(event){
 
 }); // Aqui termina el btnAGREGAR. addEventListener
 
+btnClear.addEventListener("click", function(event){
+    event.preventDefault();
+    //Limpiar el valor de los campos
+    txtNombre.value="";
+    txtNumber.value="";
+    //Limpiar el localStorage
+    /* 
+    //Elimina por cada llave/clave un solo elemnto
+    No lo use ya que usamos el de abjo
+    localStorage.removeItem("contador");
+    localStorage.removeItem("costoTotal");
+    localStorage.removeItem("totalEnProductos"); */
+    //Elimina todo el contenido del local storage
+    localStorage.clear();
+    //Limpiar la tabla
+
+    
+
+
+    // Reiniciar las varibales, contador,costoTotal, totalEnProductos
+    contador = 0;
+    costoTotal = 0;
+    totalEnProductos = 0;
+
+    //Asignar las variables a los divs
+    contadorProductos.innerText = contador;
+    productosTotal.innerText = totalEnProductos;
+    precioTotal.innerText = "$ " + costoTotal.toFixed(2); 
+    //Ocultar la alerta
+    alertValidacionesTexto.innerHTML=""; //El color rojo viene de bootsrap
+    alertValidaciones.style.display="none";
+
+    //Quitar los bordes
+    txtNombre.style.border="";
+    txtNumber.style.border="";
+    //Cuando limpias te coloca en la seccion de Nombre
+    txtNombre.focus();
+
+});
+
+
+
+
+
+
+
 
 // evento blur es cuando un campo pierde el foco, se sale del campo, el campo se ilumina de azul
 txtNombre.addEventListener("blur", function(event){ // Ilumina el campo y deja de hacerlo cuando quitas el mouse
@@ -141,14 +207,22 @@ txtNumber.addEventListener("blur", function(event){ // Ilumina el campo y deja d
 
 
 //Para que se mantengan creoooo
+//Esto de aquí hace que se muestren los datos que
+//Estuve haciendo AUNQUE LO Refresque o abra otro pestaña en el navegarodr
+//Tendre mis datos guardados y se veran en pantalla.
+
+
+//En cuanto termine de cargar todo lo de la pagina empieza a ejecitar el evento
+//Si es la primera vez que entro la informacion es null
+
 window.addEventListener("load", function(){
 
    if(this.localStorage.getItem("contador") != null){//el primer argumento es mi key y el 2do es value
         contador = Number(this.localStorage.getItem("contador"));
    }// !Null
    
-   if(this.localStorage.getItemem("totalEnProductos")!=null){
-      totalEnProductos = Number(this.localStorage.getItem("totalEnProdcutos"));
+   if(this.localStorage.getItem("totalEnProductos")!=null){
+      totalEnProductos = Number(this.localStorage.getItem("totalEnProductos"));
    }
    
    if(this.localStorage.getItem("costoTotal") !=null){
@@ -158,6 +232,20 @@ window.addEventListener("load", function(){
    contadorProductos.innerText = contador;
    productosTotal.innerText = totalEnProductos;
    precioTotal.innerText = "$ " + costoTotal.toFixed(2); 
+
+   if (this.localStorage.getItem("datos") !=null){
+    datos = JSON.parse(this.localStorage.getItem("datos")); //Transforma el strin del local storage a un array
+   }
+   datos.forEach(r => {  //datos es un arreglo
+    let row = `<tr>
+                <td>${r.contador}</td>
+                <td>${r.nombre}</td>
+                <td>${r.cantidad}</td>
+                <td>${r.precio}</td>
+              </tr>`;
+    cuerpoTabla.insertAdjacentHTML("beforeend", row);
+
+   });
 
 });// windows load
 

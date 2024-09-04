@@ -113,7 +113,7 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="Name">Nombre</label>
-                <input type="text" class="form-control" id="Name" placeholder="" value="" autocomplete="off" required>
+                <input type="text" class="form-control" id="Name" placeholder="" value="" autocomplete="off" required autofocus> <!--No es recomendable usar window y un evento para hacer esta funcion, es más facil asi,  autofocus hace que cuando cargue la pagina el foco este en el name Solo debe de haber uno ya que ocupa el primero que lo tenga-->
                 <div class="invalid-feedback">
                   Nombre inválido
                 </div>
