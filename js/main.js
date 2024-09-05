@@ -154,7 +154,7 @@ btnClear.addEventListener("click", function(event){
     //Elimina todo el contenido del local storage
     localStorage.clear();
     //Limpiar la tabla
-
+    cuerpoTabla.innerHTML="";
     
 
 
